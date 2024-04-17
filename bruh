@@ -1,0 +1,175 @@
+
+
+'''maciez_jednostkowa = [[1 if i == k else 0 for i in range(3)] for k in range(3)]
+druga = [(i,k,maciez_jednostkowa[i][k]) for i in range(3) for k in range(3)]
+a = {(i,k) : druga[i*3 + k][2] for i in range(3) for k in range(3)}
+        
+print(a.keys())
+def silnia(n):
+    if(n > 0):
+        return n * silnia(n - 1)
+    else:
+        return 1
+print(silnia(900))
+
+class Samochod:
+
+    NumerySeryjne = 1
+
+    def __init__(self,NumerRejestracyjny):
+
+        self.MojNumerSeryjny = Samochod.NumerySeryjne
+        self.MojNumerRejestracyjny = NumerRejestracyjny
+        Samochod.NumerySeryjne += 1
+
+
+    def UruchomSilnik(self):
+        print("Silnik samochodu o numerze serjnym {0} o numerze rejestracyjnym {1} zostal uruchomiony".format(self.MojNumerSeryjny,('AB ' + str(self.MojNumerRejestracyjny))))
+
+if __name__ == "__main__":
+    for i in range (5):
+        s = Samochod(2137 + i)
+        s.UruchomSilnik()
+
+from abc import ABC, abstractmethod
+
+class Figura(ABC):
+
+    @abstractmethod
+
+    def Obwod(self):
+        
+        pass
+    
+    @abstractmethod
+
+    def Pole(self):
+
+        pass
+
+class Okrag(Figura):
+    
+    def __init__(self,Promien):
+        self.Promien = Promien
+    
+    def Obwod(self):
+        return 2 * 3.1415 *  self.Promien
+    
+    def Pole(self):
+        return 3.1415 * self.Promien ** 2
+
+class Prostokat(Figura):
+
+    def __init__(self,Szerokosc,Dlugosc):
+        self.Szerokosc = Szerokosc
+        self.Dlugosc = Dlugosc
+    
+    def Pole(self):
+        return self.Dlugosc * self.Szerokosc
+    
+    def Obwod(self):
+        return (self.Dlugosc + self.Szerokosc) * 2
+
+class Trojkat:
+
+    def __init__ (a,b,c):
+        
+    @staticmethod
+    def PoleTrojkata(a,b,c):
+        p = (a + b + c)/2
+        return (p*(p-a)*(p-b)*(p-c))**0.5
+    
+    @staticmethod
+    def PoleTrojkata(a):
+        a**2 * 3**0.5 / 4
+
+
+t = Trojkat()
+print("pole {0} obwod {1}".format(t.PoleTrojkata(2),t.PoleTrojkata(2,2,2)))
+'''
+class graf:
+
+    def __init__ (self,wierzcholki,krawedzie):
+        
+        self.wierzcholki = set(wierzcholki)
+        self.krawedzie = []
+        self.polaczenia = []
+        for i in krawedzie:
+            for x in i:
+                
+                if(x not in self.wierzcholki):
+                    
+                    raise Exception("Nie da sie utworzyc polaczenia {0} poniewaz nie istnieje wierzcholek {1}".format(i,x))
+
+            if(i not in self.krawedzie):
+                    
+                self.krawedzie.append(i)
+                
+            else:
+
+                print("krawedz {0} powtorzona".format(i))        
+    
+    def polaczenie(self,wierzcholek,poprzedni,kroki):
+
+        if not kroki:
+            
+            return self.polaczenia
+        
+        for krawedz in self.krawedzie:
+            for x in range(2):
+                
+                if(krawedz[x-1] != poprzedni and krawedz[x] == wierzcholek):
+                    self.polaczenie(krawedz[x-1],wierzcholek,kroki - 1)
+                    
+                    if(kroki == 1):
+                        self.polaczenia.append(krawedz[x-1])
+        
+    
+    def drzewo(self):
+        for kroki in range(len(self.krawedzie) - 2):
+            
+            for krawedz in self.krawedzie:
+                for wierzcholek in krawedz:
+                    
+                    self.polaczenie(wierzcholek,'',kroki + 3)
+                    
+                    for x in self.polaczenia:
+                        
+                        if(x == wierzcholek):
+                            return False
+                    
+                    self.polaczenia = []
+        return True
+def posortowane(lista):
+    for i in range(len(lista) - 1):
+        if(lista[i + 1] < lista[i]):
+            return 1
+    return 0
+def sort(numerki):      #bąbelkowe
+    dl = len(numerki) - 1 
+    i = 0
+    while(posortowane(numerki)):
+        if(numerki[i % dl] > numerki[i % dl + 1]):
+            numerki.insert(i % dl,numerki[i % dl + 1])
+            numerki.insert(i % dl + 1,numerki[i % dl + 1])
+            del(numerki[i % dl + 1])
+            del(numerki[i % dl + 2])
+        i += 1
+    return numerki        
+            
+def kruskal(wagi):
+    numerki = sort(list(wagi.keys()))
+    print(numerki)
+    #wejsciowy = graf([j for i in wagi for j in wagi[i]],[wagi[i] for i in wagi])
+    temp = graf([],[])
+    for x in numerki:
+        temp.krawedzie.append(wagi[x])
+        print(temp.krawedzie)
+        if(not temp.drzewo()):
+            del(temp.krawedzie[len(temp.krawedzie) - 1])
+        else:
+            print("bruh")
+    return temp
+
+wagi = {3 : ('a','b'),2 : ('c','d'),1 : ('a','e'),6 : ('e','c'),4 : ('b','e'),5 : ('b','c'),7 : ('e','d')}
+print(kruskal(wagi).krawedzie)
